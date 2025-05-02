@@ -1,0 +1,16 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+#rgeformsubs #enderezosubscritor .infodatos {display: none;}
+#rgeformsubs  #enderezosubscritor.disabled .form-row {color: grey; opacity: 0.8;}
+#rgeformsubs  #enderezosubscritor.disabled .infodatos {display: block; color: black;}
+#rgeformsubs  #datospagamento {display: none;}
+#rgeformsubs  #datospagamento.show {display: block;}
+#rgeformsubs  .pagamentoinfo {display:none;}
+#rgeformsubs  .pagamentoinfo.show {display: block;}
+#rgeformsubs .switch-neg {display: flex; align-items: end;}
+#rgeformsubs .switch-neg>.custom-control {height: 38px; display: flex; align-items: center;}
+#rgeformsubs>section {margin-top: 1em;}
+#rgeformsubs>section>*:not(h4) {padding: 0 1.5em;}

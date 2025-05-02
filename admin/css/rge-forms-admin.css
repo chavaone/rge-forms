@@ -1,0 +1,47 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+ .collapse {
+   display: none;
+ }
+
+
+.column-tempo {
+  width: 10em;
+}
+
+.column_name {
+  width: 20em;
+}
+
+.column_telefono {
+  width: 10em;
+}
+
+.column_email {
+  width: 20em;
+}
+
+.column_tema {
+  width: 20em;
+}
+
+.column_mensaxe {
+  width: 10em;
+}
+
+
+.full_message {
+  margin-top:1em;
+}
+
+.full_message h5 {
+  margin-bottom: 0;
+}
+
+#message_display {
+  padding: 1em;
+  border: 0.5px solid rgba(0,0,0,0.4);
+}

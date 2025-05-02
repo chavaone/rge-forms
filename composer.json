@@ -1,0 +1,14 @@
+{
+    "name": "aquelando/rge-forms",
+    "description": "Add forms for RGE website",
+    "type": "wp-plugin",
+    "license": "LGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Marcos Chavarría Teijeiro",
+            "email": "chavarria1991@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
