@@ -1,3 +1,3 @@
 <div>
-  <?php _e("Your message has been registered. We will contact you as soon as posible. Thank you!");?>
+  <p>Xenial! Chegounos o teu formulario :) Nos próximos días poñerémonos en contacto contigo para comprobar que todo está ben.</p>
 </div>

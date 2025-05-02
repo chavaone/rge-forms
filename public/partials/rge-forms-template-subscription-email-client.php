@@ -13,7 +13,6 @@
             <h2>Subscripción Revista Galega de Educación</h3>
           </header>
           <main>
-            <h2>Grazas pola túa subscrición!</h2>
             <p>Estimado/a subscritor/a,</p>
 
             <p>Querémosche dar as grazas por te subscribires á nosa revista. É un pracer contar contigo entre os nosos lectores.</p>

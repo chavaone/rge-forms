@@ -1,3 +1,3 @@
 <div>
-  <?php _e("An error has occur. We will fix it whenever we can. In the meanwhile you can use alternative conctact methods.");?>
+  <p>Sentímolo, ocurriu un erro :( Inténtao de novo nun anaco. Se o fallo persiste, ponte en contacto con nós en <a href="mailto:neg@neg.gal">neg@neg.gal</a>.</p>
 </div>
