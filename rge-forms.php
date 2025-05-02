@@ -8,14 +8,15 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              https://aquelando.info
+ * @link              https://matesetal.gal
  * @since             1.0.0
  * @package           Rge_Forms
  *
  * @wordpress-plugin
  * Plugin Name:       RGE Forms
- * Plugin URI:        https://aquelando.info
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Plugin URI:        https://github.com/chavaone/rge-forms
+ * GitHub Plugin URI: https://github.com/chavaone/rge-forms
+ * Description:       Plugin simple que añade a funcionalidade de crear formularios de contacto e de subscrición a RGE.
  * Version:           1.0.0
  * Author:            Marcos Chavarría Teijeiro
  * Author URI:        https://matesetal.gal
