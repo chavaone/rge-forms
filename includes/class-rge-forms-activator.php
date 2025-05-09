@@ -48,7 +48,7 @@ class Rge_Forms_Activator {
 				tema varchar(100) NOT NULL,
 				mensaxe varchar(300) NOT NULL,
 				tempo varchar(20) NOT NULL,
-				UNIQUE KEY id (id)
+				PRIMARY KEY id (id)
 		) $charset_collate;";
 
 		if ( ! function_exists('dbDelta') ) {
@@ -72,7 +72,7 @@ class Rge_Forms_Activator {
         datos varchar(1000),
 				tempo varchar(20),
         activa boolean DEFAULT FALSE, 
-				UNIQUE KEY id (id)
+				PRIMARY KEY id (id)
 		) $charset_collate;";
 
 		if ( ! function_exists('dbDelta') ) {
