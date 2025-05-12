@@ -72,6 +72,10 @@ class Rge_Forms_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/rge-forms-admin.js', array( 'jquery' ), $this->version, false );
 	}
 
+  public function render_wellcome_page() {
+		include plugin_dir_path( __FILE__ ) . "partials/rge-forms-wellcome-page.php";
+  }
+
 	public function render_contact_submissions() {
 		include plugin_dir_path( __FILE__ ) . "partials/rge-forms-contact-admin.php";
 	}
@@ -80,11 +84,11 @@ class Rge_Forms_Admin {
 		include plugin_dir_path( __FILE__ ) . "partials/rge-forms-subscription-admin.php";
 	}
 
-	public function render_main_page () {
-		include plugin_dir_path( __FILE__ ) . "partials/rge-forms-main-admin.php";
+	public function render_settings_page () {
+		include plugin_dir_path( __FILE__ ) . "partials/rge-forms-settings-admin.php";
 	}
 
-	public function render_settings_desecription () {
+	public function render_settings_description () {
 		?>
 		<p>Settings for RGE Forms</p>
 		<?php
@@ -97,32 +101,155 @@ class Rge_Forms_Admin {
 		<?php
 	}
 
+ public function procesar_csv_suscriptores($archivo, $activo) {
+    global $wpdb;
+    $table_name = $wpdb->prefix . "rge_subscription";
+
+    if (($handle = fopen($archivo['tmp_name'], 'r')) !== FALSE) {
+      $fila = 0;
+      $insertados = 0;
+      $omitidos = [];
+
+      while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+        $fila++;
+
+        // Saltar cabecera si empieza por "nombre"
+        if ($fila == 1 && strtolower(trim($data[0])) == 'nombre') {
+          continue;
+        }
+
+        $nombre = sanitize_text_field($data[0]);
+        $email = sanitize_email($data[1]);
+
+        if (!empty($nombre) && is_email($email)) {
+          // Comprobar si el email ya existe
+          $existe = $wpdb->get_var(
+            $wpdb->prepare("SELECT COUNT(*) FROM $table_name WHERE email = %s", $email)
+          );
+
+          if ($existe) {
+            $omitidos[] = [
+              'fila' => $fila,
+              'nombre' => $nombre,
+              'email' => $email
+            ];
+            continue;
+          }
+
+          $wpdb->insert(
+            $table_name,
+            [
+              'nome'   => $nombre,
+              'email'  => $email,
+              'datos'  => '',
+              'tempo'  => current_time('mysql'),
+              'activa' => $activo,
+            ],
+            ['%s', '%s', '%s', '%s', '%d']
+          );
+          $insertados++;
+        }
+      }
+      fclose($handle);
+
+      // Mensaje de éxito
+      echo '<div class="notice notice-success"><p>Se importaron ' . esc_html($insertados) . ' registros.</p></div>';
+
+      // Mostrar omitidos si los hay
+      if (!empty($omitidos)) {
+        echo '<div class="notice notice-warning"><p>Se omitieron ' . count($omitidos) . ' registros por email duplicado:</p>';
+        echo '<ul>';
+        foreach ($omitidos as $om) {
+          echo '<li>Fila ' . esc_html($om['fila']) . ': ' . esc_html($om['nombre']) . ' (' . esc_html($om['email']) . ')</li>';
+        }
+        echo '</ul></div>';
+      }
+    } else {
+      echo '<div class="notice notice-error"><p>No se pudo leer el archivo CSV.</p></div>';
+    }
+  }
+
+
+  public function mostrar_pagina_importacion() {
+    ?>
+    <div class="wrap">
+      <h1>Importar Suscriptores</h1>
+      <form method="post" enctype="multipart/form-data">
+        <?php wp_nonce_field('importar_csv', 'importar_csv_nonce'); ?>
+        <p>
+          <label for="csv_file">Archivo CSV (nombre,email):</label><br>
+          <input type="file" name="csv_file" accept=".csv" required>
+        </p>
+        <p>
+          <label for="activo">¿Activar los nuevos registros?</label><br>
+          <select name="activo">
+            <option value="1">Sí</option>
+            <option value="0">No</option>
+          </select>
+        </p>
+        <?php submit_button('Importar'); ?>
+      </form>
+    </div>
+    <?php
+
+    if (
+      isset($_FILES['csv_file']) &&
+      isset($_POST['activo']) &&
+      check_admin_referer('importar_csv', 'importar_csv_nonce')
+    ) {
+      $this->procesar_csv_suscriptores($_FILES['csv_file'], intval($_POST['activo']));
+    }
+  }
+
 	public function add_admin_pages () {
 
 		add_menu_page(
-			__("RGE Forms"),
-			__("RGE Forms", "rge-forms"),
+			"Formularios RGE",
+			"Formularios RGE",
 			'manage_options',
 			'rge-forms-page',
-			array($this, 'render_main_page')
+			array($this, 'render_wellcome_page'),
+      'dashicons-forms'
 		);
 
-		add_submenu_page(
+    add_submenu_page(
 			'rge-forms-page',
-			__("Contact Form", "rge-forms"),
-			__("Contact Form", "rge-forms"),
+			"Formulario Contacto",
+			"Formulario Contacto",
 			'manage_options',
 			'rge-contact-form',
-			array($this, 'render_contact_submissions')
+			array($this, 'render_contact_submissions'),
+      10
 		);
 
 		add_submenu_page(
 			'rge-forms-page',
-			__("Subscription Form", "rge-forms"),
-			__("Subscription Form", "rge-forms"),
+			"Formulario Suscriptores",
+			"Formulario Suscriptores",
 			'manage_options',
-			'rge-subscription-form',
-			array($this, 'render_subscription_submissions')
+			'rge-contact-form',
+      array($this, 'render_subscription_submissions'),
+      11
+		);
+
+    add_submenu_page(
+    'rge-forms-page',
+		'Importar Suscriptores',
+		'Importar Suscriptores',
+		'manage_options',
+		'importar-suscriptores',
+    array($this, 'mostrar_pagina_importacion'),
+    12
+    );
+
+		add_submenu_page(
+			'rge-forms-page',
+			"Configuración",
+			"Configuración",
+			'manage_options',
+			'rge-forms-settings',
+      array($this, 'render_settings_page'),
+      13
 		);
 
 	}
@@ -132,20 +259,20 @@ class Rge_Forms_Admin {
 		add_settings_section(
 			'rge-forms-settings-section',// ID used to identify this section and with which to register options
 			'', // Title to be displayed on the administration page
-			array( $this, 'render_settings_desecription' ), // Callback used to render the description of the section
-			'rge-forms-page' // Page on which to add this section of options
+			array( $this, 'render_settings_description' ), // Callback used to render the description of the section
+			'rge-forms-settings' // Page on which to add this section of options
 		);
 
 		add_settings_field(
 			'rge_forms_email',
 			'Email',
 			array( $this, 'render_email_setting_input' ),
-			'rge-forms-page',
+			'rge-forms-settings',
 			'rge-forms-settings-section',
 		);
 
 		register_setting(
-			'rge-forms-page',
+			'rge-forms-settings',
 			'rge_forms_email'
 		);
 

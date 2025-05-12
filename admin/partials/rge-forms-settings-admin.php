@@ -19,8 +19,8 @@
 
   <form method="POST" action="options.php">
       <?php
-          settings_fields( 'rge-forms-page' );
-          do_settings_sections( 'rge-forms-page' );
+          settings_fields( 'rge-forms-settings' );
+          do_settings_sections( 'rge-forms-settings' );
       ?>
       <?php submit_button(); ?>
   </form>
